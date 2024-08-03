@@ -1,0 +1,8 @@
+[package]
+name = "EncoderRS"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+openh264 = "0.6.2"
+video_processing = { path = "video_processing"}

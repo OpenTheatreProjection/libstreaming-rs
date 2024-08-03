@@ -1,0 +1,6 @@
+/target
+video_processing/target
+video_processing/Cargo.lock
+/.idea
+
+Cargo.lock
