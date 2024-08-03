@@ -9,6 +9,9 @@ pub trait DecodeDevice {
     // Outputs the decoder
     fn init(width: u32, height: u32) -> Self;
 
+    // Require all devices to be able to process NALs
+    fn convert_to_nal(frame: &[u8]) -> Vec<Vec<u8>>;
+
     // Decode the passed frame to the selected encoder
     fn decode_frame(&mut self, frame: &frame::Frame) -> Result<Vec<u8>, String>;
 

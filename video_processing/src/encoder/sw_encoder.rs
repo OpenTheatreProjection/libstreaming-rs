@@ -19,6 +19,14 @@ impl device::EncodeDevice for SwEncoder{
         })
     }
 
+    fn convert_to_nal(frame: &[u8]) -> Vec<Vec<u8>> {
+        let mut nal: Vec<Vec<u8>> = vec![];
+        for nal_unit in openh264::nal_units(frame){
+            nal.push(nal_unit.to_vec())
+        }
+        nal
+    }
+
     fn encode_frame(&mut self, frame: &Frame) -> Result<Vec<u8>, String>{
         // Encoder MUST have the frame in YUV
         let frame_data: openh264::formats::YUVBuffer;
