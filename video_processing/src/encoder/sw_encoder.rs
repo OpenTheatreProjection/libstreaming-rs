@@ -1,22 +1,29 @@
+#[cfg(feature = "enable_swencoder")]
 use openh264;
+use crate::encoder::device::EncoderSettings;
 use crate::frame::{EEncoding, EFrameType, EPixelFormat, Frame};
 use super::device;
+
+#[cfg(feature = "enable_swencoder")]
 pub struct SwEncoder{
     encoder: Option<openh264::encoder::Encoder>
 }
 
+
+#[cfg(feature = "enable_swencoder")]
 impl device::EncodeDevice for SwEncoder{
     fn is_supported() -> bool {
         // The SW encoder will ALWAYS be supported
         true
     }
 
-    fn init(width: u32, height: u32) -> Self{
+    fn init(_settings: EncoderSettings) -> Self{
         // Encoded frames can be of any width and height, so these values are unused
-        (Self{
+        // If a doofus actually tried setting and settings, ignore the
+        Self{
             encoder: Some(openh264::encoder::Encoder::new()
                 .expect("Unable to build OpenH264 encoder"))
-        })
+        }
     }
 
     fn convert_to_nal(frame: &[u8]) -> Vec<Vec<u8>> {
@@ -47,15 +54,10 @@ impl device::EncodeDevice for SwEncoder{
                 match frame.pixel_format{
                     EPixelFormat::RGB8 => {
                         let rgb_data =
-                            openh264::formats::RgbSliceU8::new(frame.data.as_slice(),
+                            openh264::formats::RgbSliceU8::new(frame.data[0].as_slice(),
                                                                (frame.width as usize,
                                                                 frame.height as usize));
                         frame_data = openh264::formats::YUVBuffer::from_rgb_source(rgb_data);
-                    }
-                    EPixelFormat::YUV8 => {
-                        frame_data = openh264::formats::YUVBuffer::from_vec(frame.data.clone(),
-                                                                            frame.width as usize,
-                                                                            frame.height as usize);
                     }
                     _ => {
                         return Err(String::from("Unsupported Pixel Format"))

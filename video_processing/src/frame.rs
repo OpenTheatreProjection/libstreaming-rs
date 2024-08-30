@@ -1,6 +1,6 @@
-#[derive(Clone)]
-
+#[derive(Default, Clone, Copy)]
 pub enum EFrameType{
+    #[default]
     CPU,
     DXD11,
     DXD12,
@@ -8,23 +8,34 @@ pub enum EFrameType{
     OPENGL,
     UNDEFINED
 }
-#[derive(Clone)]
-
+#[derive(Default, Clone, Copy)]
 pub enum EPixelFormat{
     RGB8,
+    #[deprecated]
     YUV8,
+    #[default]
+    YUV420,
     UNDEFINED
 }
-#[derive(Clone)]
-
+#[derive(Default, Clone, Copy)]
 pub enum EEncoding{
+    #[default]
     H264,
     H265,
     AV1,
     UNDEFINED
 }
 
-#[derive(Clone)]
+#[derive(Default, Clone, Copy)]
+pub enum EHardwareAcceleration{
+    #[default]
+    CPU,
+    NVIDIA,
+    AMD,
+    RASPBERRYPI
+}
+
+#[derive(Default, Clone)]
 pub struct Frame{
     // Location of the frame in memory
     pub frame_type: EFrameType,
@@ -37,9 +48,11 @@ pub struct Frame{
     pub width: u32,
     pub height: u32,
     // Only Defined for CPU Frames
-    pub data: Vec<u8>,
+    pub data: Vec<Vec<u8>>,
     // Pointer to GPU Data
-    pub data_ptr: u64
+    pub data_ptr: u64,
+    // The frame count in the video
+    pub index: i32,
 }
 
 impl Frame{

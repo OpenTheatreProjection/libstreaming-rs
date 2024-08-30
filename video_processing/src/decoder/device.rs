@@ -17,3 +17,11 @@ pub trait DecodeDevice {
 
     fn destroy(&mut self);
 }
+
+#[derive(Default, Clone, Copy)]
+pub struct DecoderSettings{
+    pub codec: frame::EEncoding,
+    pub target_pixel_format: frame::EPixelFormat,
+    pub hardware_acceleration: frame::EHardwareAcceleration,
+    pub fps: u32,
+}
